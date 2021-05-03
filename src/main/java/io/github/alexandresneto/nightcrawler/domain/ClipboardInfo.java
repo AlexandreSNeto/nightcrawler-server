@@ -9,6 +9,8 @@ import lombok.*;
 @AllArgsConstructor
 public class ClipboardInfo {
 
+    private String username;
+
     private String hostname;
 
     private String content;

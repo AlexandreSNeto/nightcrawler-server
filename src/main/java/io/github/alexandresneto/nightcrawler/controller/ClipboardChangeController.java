@@ -15,17 +15,23 @@ public class ClipboardChangeController {
     private Map<String, ClipboardInfo> database = new HashMap<>();
 
     @PostMapping
-    public void register(ClipboardInfo info) {
+    public void register(@RequestBody ClipboardInfo info) {
         log.info("Registrando alterações {}", info);
 
-        database.put(info.getHostname(), info);
+        database.put(info.getUsername(), info);
     }
 
-    @GetMapping("/{hostname}")
-    public ClipboardInfo get(@PathVariable("hostname") String hostname) {
-        log.info("Buscando alterações para o host {}", hostname);
+    @GetMapping("/{username}/{hostname}")
+    public ClipboardInfo get(@PathVariable("username") String username, @PathVariable("hostname") String hostname) {
+        log.info("Buscando alterações para o usuario {} a partir do hostname {} ", username, hostname);
 
-        return database.get(hostname);
+        ClipboardInfo clipboardInfo = database.get(username);
+        if (clipboardInfo != null && !clipboardInfo.getHostname().equals(hostname)) {
+            database.remove(username);
+            return clipboardInfo;
+        }
+
+        return null;
     }
 
 }
