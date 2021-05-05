@@ -1,0 +1,33 @@
+language: java
+
+addons:
+  apt:
+    packages:
+      - xml2
+
+sudo: required
+
+jdk:
+  - oraclejdk11
+
+services:
+  - docker
+
+script:
+  - mvn clean package dockerfile:build
+
+branches:
+  only:
+    - master
+    - develop
+
+after_success:
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - export REPO=$DOCKER_USERNAME/nightcrawler-server
+  - export VERSION=`xml2 < pom.xml  | grep /project/version= | sed 's/.*=//'`
+  - test "$TRAVIS_BRANCH" == 'master' && (docker tag $REPO $REPO:$VERSION; docker push $REPO:latest; docker push $REPO:$VERSION)
+  - test "$TRAVIS_BRANCH" == 'develop' && (docker tag $REPO $REPO:snapshot; docker push $REPO:snapshot)
+
+cache:
+  directories:
+    - $HOME/.m2
