@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/clipboard")
+@RequestMapping("/change")
 @Slf4j
 public class ClipboardChangeController {
 
@@ -28,7 +28,7 @@ public class ClipboardChangeController {
         ClipboardInfo clipboardInfo = database.get(username);
         if (clipboardInfo != null && !clipboardInfo.getHostname().equals(hostname)) {
             database.remove(username);
-            log.info("Clipboard Server :: Content founded: {}", clipboardInfo);
+            log.info("Clipboard Server :: New content founded for: {}", clipboardInfo.getUsername());
             return clipboardInfo;
         }
 
