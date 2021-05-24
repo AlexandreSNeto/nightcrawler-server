@@ -14,6 +14,7 @@
 	<name>nightcrawler-server</name>
 	<description>Nightcrawler Server</description>
 	<properties>
+		<docker.image.prefix>alexandresneto</docker.image.prefix>
 		<java.version>11</java.version>
 	</properties>
 	<dependencies>
@@ -46,6 +47,18 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.13</version>
+				<configuration>
+					<buildArgs>
+						<APPLICATION_NAME>${project.artifactId}</APPLICATION_NAME>
+						<VERSION>${project.version}</VERSION>
+					</buildArgs>
+					<repository>${docker.image.prefix}/${project.artifactId}</repository>
 				</configuration>
 			</plugin>
 		</plugins>
